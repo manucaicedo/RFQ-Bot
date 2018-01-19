@@ -1,42 +1,52 @@
-# Structured Objects Dropwizard Bot Sample
+# RFQ Structured Object Bot
 
 ## Introduction
 
-This example shows a simple Symphony chat bot using the [SymphonyOSS symphony-java-client](https://github.com/symphonyoss/symphony-java-client) and Dropwizard. The Trade Alert Bot is part of a PWM demo that shows the interaction on Symphony between an FA and a client. The bot responds to the keyword 'alert' with a structured object message. Also, since it is a Dropwizard application, endpoints can be configured to trigger messages. 
+This example shows how a Symphony chat bot using the [SymphonyOSS symphony-java-client](https://github.com/symphonyoss/symphony-java-client) and Dropwizard can be used to manage the life cycle of an RFQ. The bot takes the workflow since the initial request, through quoting and negotiation, all the way to order creation. This integration makes use of the Extension API [entity-service](https://extension-api.symphony.com/docs/entity-service) to render bot messages as interactive forms. The extension app, uses iFrames to render an Angular app that connects via REST API to this project to display the current status of the RFQ at different stages and pass the input information for the bot to post it back into the room for retention and time stamp purposes. 
 
 ## Pre-requisites
 
-1. Service account with a valid certificate for the bot
-2. Extension API application with a entity renderer for the structured object
+    1. Service account with a valid certificate for the bot
+    2. Extension API application with a entity renderer for the structured objects
+    3. Web application that is rendered by the Extension App
+    4. For users to see the objects rendered properly they need to have the app enabled in the pod and installed for their specific user.
+        -Mobile and ECM do not render structured objects.
+        -For XPOD use of this integration, the app would need to be deployed at the firms that communicate with the bot.
 
 ## Overview
 
-At startup, the TradeBot is initialized as a Chat and Room listener so the implemented methods respond to the events of the datafeed for the bot.
+* At startup, the `RFQBot` is initialized as a Chat and Room listener so the implemented methods respond to the events of the datafeed for the bot. Go to this class to find most implementation details. 
 
-* The `onChatMessage` method has the code to send a messageML with a structured object. The entity data should indicate the type (this refers to the renderer Extensions API application for the message)
-and any additional fields for the object that will be rendered, in this case the sender's email address.
+* `RFQBotResource` class is where the endpoints that are called by the Angular app are defined to move the RFQ through all the different stages
 
-In this sample, the renderer for the structured object uses an iframe that is clickable on the Symphony UI. To bring the conversation back to the chat itself, a button is set up to call an endpoint of this application that then posts a confirmation message to the specified streamId. 
+* `RFQInfoResource` class is where the endpoints that are called by the Angular app are defined to gather data about an RFQ and display it.
 
-* The `TradeBotResource` includes the endpoints that given certain parameters, trigger the bot to send messages to either 1-1 conversation with a userb by email, or a streamId.
+* `AppAuthResource` class is where extension app appauth endpoint will live (work in progress)
+
 
 ## Running This Sample
 
 Set up your config in `example.yml`. Fill out the following parameters.
 
-        sessionAuthURL: 
-        keyAuthUrl: 
-        localKeystorePath: 
-        localKeystorePassword: 
-        botCertPath: 
-        botCertPassword: 
-        botEmailAddress: 
-        agentAPIEndpoint: 
-        podAPIEndpoint: 
-        userEmailAddress: 
+        sessionAuthURL: https://your-pod.symphony.com/sessionauth
+        keyAuthUrl: https://your-km.symphony.com:8444/keyauth
+        localKeystorePath: complete path to your jks keystore
+        localKeystorePassword: keystore password
+        botCertPath: complete path to your bot's p12 file
+        botCertPassword: password
+        botEmailAddress: bot.user@example.com
+        agentAPIEndpoint: https://your-agent.symphony.com/agent
+        podAPIEndpoint: https://your-pod.symphony.com/pod
+        userEmailAddress: your-email@company.com
+        mongoURL: URL to your mongo instance
         
         keyStorePath: 
         keyStorePassword: 
+
+If you are developing a bot that lives within an enterprise pod with on-premise components (KM and Agent) and need a proxy to reach the cloud (your pod) add the following field to your sample.yml file
+
+        proxyURL: url to your internal proxy
+
 
 To test the application run the following commands.
 
@@ -46,8 +56,4 @@ To test the application run the following commands.
 
 * To run the server run.
 
-        java -jar target/dropwizard-api-test-1.1.0-SNAPSHOT-sources.jar server example.yml
-
-* To hit the endpoint to send a Trade Alert message
-
-	http://localhost:7070/tradeBot/sendTradeAlert?email=[yourtestemail]
+        java -jar target/RFQ-form-bot-1.1.0-SNAPSHOT-sources.jar server example.yml

@@ -1,4 +1,4 @@
-package com.example.testbot;
+package com.symphony.bot;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Map;
 
-public class SymphonyTestConfiguration extends Configuration {
+public class SymphonyConfiguration extends Configuration {
 
     @NotEmpty
     private String sessionAuthURL;
@@ -37,10 +37,26 @@ public class SymphonyTestConfiguration extends Configuration {
     private String podAPIEndpoint;
 
     @NotEmpty
+    private String companyName;
+
+    @NotEmpty
     private String template;
 
     @NotEmpty
     private String defaultName = "Stranger";
+
+    @JsonProperty
+    @NotEmpty
+    public String mongohost;
+
+    @JsonProperty
+    public int mongoport;
+
+    @JsonProperty
+    @NotEmpty
+    public String mongodb;
+
+    public String proxyURL;
 
     @Valid
     @NotNull
@@ -193,4 +209,43 @@ public class SymphonyTestConfiguration extends Configuration {
         this.userEmailAddress = userEmailAddress;
     }
 
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getMongohost() {
+        return mongohost;
+    }
+
+    public void setMongohost(String mongohost) {
+        this.mongohost = mongohost;
+    }
+
+    public int getMongoport() {
+        return mongoport;
+    }
+
+    public void setMongoport(int mongoport) {
+        this.mongoport = mongoport;
+    }
+
+    public String getMongodb() {
+        return mongodb;
+    }
+
+    public void setMongodb(String mongodb) {
+        this.mongodb = mongodb;
+    }
+
+    public String getProxyURL() {
+        return proxyURL;
+    }
+
+    public void setProxyURL(String proxyURL) {
+        this.proxyURL = proxyURL;
+    }
 }
