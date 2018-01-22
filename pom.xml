@@ -8,7 +8,7 @@
     <artifactId>RFQ-form-bot</artifactId>
     <version>1.1.0-SNAPSHOT</version>
     <groupId>com.symphony</groupId>
-    <name>Dropwizard IOI Form Bot</name>
+    <name>Dropwizard RFQ Form Bot</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -125,7 +125,7 @@
         <dependency>
             <groupId>org.symphonyoss.symphony</groupId>
             <artifactId>symphony-client</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.http-client</groupId>

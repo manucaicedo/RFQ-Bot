@@ -9,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.symphonyoss.client.SymphonyClient;
 
-import javax.ws.rs.*;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -61,7 +63,7 @@ public class RFQBotResource {
     @POST
     @Path("/confirm/")
     public Response confirmIOI(ObjectId id) {
-        RFQ result = RFQBot.confirmIOI(id.toString());
+        RFQ result = RFQBot.confirmRFQ(id.toString());
 
         return Response.status(Response.Status.OK).entity(result).build();
     }

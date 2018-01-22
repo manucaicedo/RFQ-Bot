@@ -1,15 +1,14 @@
 package com.symphony.bot.resources;
 
-import com.symphony.bot.POJO.RFQ;
 import com.symphony.bot.SymphonyConfiguration;
-import com.symphony.bot.mongo.MongoDBClient;
 import com.symphony.bot.utils.AppAuthClient;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.symphonyoss.client.SymphonyClient;
 
-import javax.ws.rs.*;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 

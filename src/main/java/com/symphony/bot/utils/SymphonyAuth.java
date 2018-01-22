@@ -1,4 +1,5 @@
-package com.symphony.research.utils;
+package com.symphony.bot.utils;
+
 
 import com.symphony.bot.SymphonyConfiguration;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;

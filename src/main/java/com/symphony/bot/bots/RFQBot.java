@@ -11,7 +11,7 @@ import org.symphonyoss.client.exceptions.*;
 import org.symphonyoss.client.model.Chat;
 import org.symphonyoss.client.model.Room;
 import org.symphonyoss.client.services.*;
-import org.symphonyoss.symphony.clients.model.*;
+import org.symphonyoss.symphony.clients.model.SymMessage;
 import org.symphonyoss.symphony.pod.api.StreamsApi;
 import org.symphonyoss.symphony.pod.invoker.ApiException;
 import org.symphonyoss.symphony.pod.model.Stream;
@@ -80,6 +80,7 @@ public class RFQBot implements ChatListener, ChatServiceListener, RoomServiceEve
             String company=null;
             try {
                 company = symClient.getUsersClient().getUserFromId(message.getSymUser().getId()).getCompany();
+                company = company.contains("Preview")? "TopGun":company;
             } catch (UsersClientException e) {
                 e.printStackTrace();
             }
@@ -206,6 +207,7 @@ public class RFQBot implements ChatListener, ChatServiceListener, RoomServiceEve
     public RFQ sendIOI(RFQ rfq){
         try {
             rfq.setStatus("pending");
+            rfq.setSymbol(rfq.getSymbol().toUpperCase());
             mongoDBClient.updateRFQ(rfq);
 
             Stream stream = new Stream();
@@ -216,13 +218,21 @@ public class RFQBot implements ChatListener, ChatServiceListener, RoomServiceEve
 
             symClient.getMessagesClient().sendMessage(stream, message2);
 
+
+            String targetStreamId = mongoDBClient.getRoomForTargetCompany(config.getCompanyName());
+            Stream RFQRoomStream = new Stream();
+            RFQRoomStream.setId(targetStreamId);
+
+            SymMessage newRFQmsg = new SymMessage();
+            newRFQmsg.setMessage("<messageML><div><card accent='tempo-text-color--green'>RFQ Received from <mention email=\""+rfq.getSenderEmail()+"\"/><br/><hr /><b>"+ rfq.getAction()+" "+ rfq.getNumShares()+" <cash tag='"+ rfq.getSymbol()+"'/> </b></card></div></messageML>");
+            symClient.getMessagesClient().sendMessage(RFQRoomStream, newRFQmsg);
+
+
             message2.setEntityData("{\"summary\": { \"type\": \"com.symphsol.mifid\", \"version\":  \"1.0\", \"client\":  \"false\", \"status\":  \""+ rfq.getStatus()+"\", \"id\":  \""+ rfq.getId()+"\", \"action\":  \""+ rfq.getAction()+"\" , \"symbol\":  \""+ rfq.getSymbol()+"\" " +
                     ", \"numShares\":  \""+ rfq.getNumShares()+"\", \"senderCompany\":  \""+ rfq.getSenderCompany()+"\", \"sender\":  \""+ rfq.getSenderEmail()+"\"}}");
             message2.setMessage("<messageML><div class='entity' data-entity-id='summary'><card accent='tempo-text-color--green'>RFQ Received<br/><hr /><b>"+ rfq.getAction()+" "+ rfq.getNumShares()+" <cash tag='"+ rfq.getSymbol()+"'/> </b></card></div></messageML>");
-            String targetStreamId = mongoDBClient.getRoomForTargetCompany(config.getCompanyName());
-            Stream IOIRoomStream = new Stream();
-            IOIRoomStream.setId(targetStreamId);
-            symClient.getMessagesClient().sendMessage(IOIRoomStream, message2);
+            symClient.getMessagesClient().sendMessage(RFQRoomStream, message2);
+
 
         } catch (MessagesException e) {
             System.out.println(e);
@@ -241,7 +251,7 @@ public class RFQBot implements ChatListener, ChatServiceListener, RoomServiceEve
             roomAttributes.setDescription("RFQ: "+ rfqId);
             roomAttributes.setDiscoverable(false);
             roomAttributes.setMembersCanInvite(false);
-            roomAttributes.setName("RFQ "+ rfq.getSenderCompany()+"-"+ rfq.getTargetCompany()+" : "+ rfq.getAction()+" "+ rfq.getSymbol()+" "+ rfq.getNumShares());
+            roomAttributes.setName("RFQ "+ rfq.getSenderCompany()+"-"+ rfq.getTargetCompany()+": "+ rfq.getAction()+" "+ rfq.getSymbol()+" "+ rfq.getNumShares());
             roomAttributes.setMembersCanInvite(false);
             roomAttributes.setPublic(false);
             roomAttributes.setViewHistory(false);
@@ -313,17 +323,23 @@ public class RFQBot implements ChatListener, ChatServiceListener, RoomServiceEve
         return rfq;
     }
 
-    public RFQ confirmIOI(String rfqId){
+    public RFQ confirmRFQ(String rfqId){
         RFQ rfq = mongoDBClient.getRFQ(rfqId);
         rfq.setStatus("confirmed");
         mongoDBClient.updateRFQ(rfq);
         Stream pricingStream = new Stream();
         pricingStream.setId(rfq.getPricingStreamId());
 
-        SymMessage message2 = new SymMessage();
-        message2.setEntityData("{\"summary\": { \"type\": \"com.symphsol.mifid\", \"version\":  \"1.0\", \"status\":  \""+ rfq.getStatus()+"\", \"id\":  \""+rfqId+"\", \"action\":  \""+ rfq.getAction()+"\" , \"symbol\":  \""+ rfq.getSymbol()+"\" " +
+        SymMessage traderRoomMsg = new SymMessage();
+        SymMessage senderMsg = new SymMessage();
+
+        senderMsg.setEntityData("{\"summary\": { \"type\": \"com.symphsol.mifid\", \"version\":  \"1.0\", \"status\":  \""+ rfq.getStatus()+"\", \"id\":  \""+rfqId+"\", \"action\":  \""+ rfq.getAction()+"\" , \"symbol\":  \""+ rfq.getSymbol()+"\" " +
                 ", \"numShares\":  \""+ rfq.getNumShares()+"\", \"senderCompany\":  \""+ rfq.getSenderCompany()+"\", \"sender\":  \""+ rfq.getSenderEmail()+"\", \"traderEmail\":  \""+ rfq.getTraderEmail()+"\"}}");
-        message2.setMessage("<messageML><card accent='tempo-text-color--green'>RFQ Confirmed<br/><hr/><b>"+ rfq.getAction()+" "+ rfq.getNumShares()+" <cash tag='"+ rfq.getSymbol()+"'/> @"+ rfq.getPrice()+"</b></card></messageML>");
+        senderMsg.setMessage("<messageML><card accent='tempo-text-color--green'>Order Created for "+rfq.getTargetCompany()+"<br/><hr/><b>"+ rfq.getAction()+" "+ rfq.getNumShares()+" <cash tag='"+ rfq.getSymbol()+"'/> @"+ rfq.getPrice()+"</b></card></messageML>");
+
+        traderRoomMsg.setEntityData("{\"summary\": { \"type\": \"com.symphsol.mifid\", \"version\":  \"1.0\", \"status\":  \""+ rfq.getStatus()+"\", \"id\":  \""+rfqId+"\", \"action\":  \""+ rfq.getAction()+"\" , \"symbol\":  \""+ rfq.getSymbol()+"\" " +
+                ", \"numShares\":  \""+ rfq.getNumShares()+"\", \"senderCompany\":  \""+ rfq.getSenderCompany()+"\", \"sender\":  \""+ rfq.getSenderEmail()+"\", \"traderEmail\":  \""+ rfq.getTraderEmail()+"\"}}");
+        traderRoomMsg.setMessage("<messageML><card accent='tempo-text-color--green'>Order Created by <mention email=\""+rfq.getSenderEmail()+"\"/><br/><hr/><b>"+ rfq.getAction()+" "+ rfq.getNumShares()+" <cash tag='"+ rfq.getSymbol()+"'/> @"+ rfq.getPrice()+"</b></card></messageML>");
 
         Stream originStream = new Stream();
         originStream.setId(rfq.getOriginStreamId());
@@ -333,9 +349,9 @@ public class RFQBot implements ChatListener, ChatServiceListener, RoomServiceEve
         traderStream.setId(traderStreamId);
 
         try {
-            symClient.getMessagesClient().sendMessage(pricingStream, message2);
-            symClient.getMessagesClient().sendMessage(originStream, message2);
-            symClient.getMessagesClient().sendMessage(traderStream, message2);
+            symClient.getMessagesClient().sendMessage(pricingStream, traderRoomMsg);
+            symClient.getMessagesClient().sendMessage(originStream, senderMsg);
+            symClient.getMessagesClient().sendMessage(traderStream, traderRoomMsg);
 
             symClient.getStreamsClient().deactivateRoom(rfq.getPricingStreamId());
         } catch (MessagesException e) {

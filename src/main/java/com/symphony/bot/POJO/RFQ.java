@@ -2,7 +2,6 @@ package com.symphony.bot.POJO;
 
 import org.bson.types.ObjectId;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class RFQ {
