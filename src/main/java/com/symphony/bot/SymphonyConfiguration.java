@@ -37,30 +37,120 @@ public class SymphonyConfiguration extends Configuration {
     private String podAPIEndpoint;
 
     @NotEmpty
-    private String companyName;
-
-    @NotEmpty
     private String template;
 
     @NotEmpty
     private String defaultName = "Stranger";
 
-    @JsonProperty
-    @NotEmpty
-    public String mongohost;
+    private String proxyURL;
 
-    @JsonProperty
-    public int mongoport;
+    private String mongoURL;
 
-    @JsonProperty
-    @NotEmpty
-    public String mongodb;
+    private String proxyUsername;
 
-    public String proxyURL;
+    private String proxyPassword;
 
-    @Valid
-    @NotNull
-    private DataSourceFactory database = new DataSourceFactory();
+    private String companyName;
+    public String appAuthBase;
+
+    public String appAuthPath;
+
+    public String appCertPath;
+
+    public String appCertPassword;
+
+    public String symphCertBaseURL;
+
+    public String symphCertPathURL;
+
+    public String getSymphCertBaseURL() {
+        return symphCertBaseURL;
+    }
+
+    public void setSymphCertBaseURL(String symphCertBaseURL) {
+        this.symphCertBaseURL = symphCertBaseURL;
+    }
+
+    public String getSymphCertPathURL() {
+        return symphCertPathURL;
+    }
+
+    public void setSymphCertPathURL(String symphCertPathURL) {
+        this.symphCertPathURL = symphCertPathURL;
+    }
+
+    public String getAppCertPath() {
+        return appCertPath;
+    }
+
+    public void setAppCertPath(String appCertPath) {
+        this.appCertPath = appCertPath;
+    }
+
+    public String getAppCertPassword() {
+        return appCertPassword;
+    }
+
+    public void setAppCertPassword(String appCertPassword) {
+        this.appCertPassword = appCertPassword;
+    }
+
+    public String getAppAuthBase() {
+        return appAuthBase;
+    }
+
+    public void setAppAuthBase(String appAuthBase) {
+        this.appAuthBase = appAuthBase;
+    }
+
+    public String getAppAuthPath() {
+        return appAuthPath;
+    }
+
+    public void setAppAuthPath(String appAuthPath) {
+        this.appAuthPath = appAuthPath;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public void setProxyUsername(String proxyUsername) {
+        this.proxyUsername = proxyUsername;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    public void setProxyPassword(String proxyPassword) {
+        this.proxyPassword = proxyPassword;
+    }
+
+    public String getMongoURL() {
+        return mongoURL;
+    }
+
+    public void setMongoURL(String mongoURL) {
+        this.mongoURL = mongoURL;
+    }
+
+    public String getProxyURL() {
+        return proxyURL;
+    }
+
+    public void setProxyURL(String proxyURL) {
+        this.proxyURL = proxyURL;
+    }
+
 
     @NotNull
     private Map<String, Map<String, String>> viewRendererConfiguration = Collections.emptyMap();
@@ -85,15 +175,7 @@ public class SymphonyConfiguration extends Configuration {
         this.defaultName = defaultName;
     }
 
-    @JsonProperty("database")
-    public DataSourceFactory getDataSourceFactory() {
-        return database;
-    }
 
-    @JsonProperty("database")
-    public void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
-        this.database = dataSourceFactory;
-    }
 
     @JsonProperty("viewRendererConfiguration")
     public Map<String, Map<String, String>> getViewRendererConfiguration() {
@@ -209,43 +291,4 @@ public class SymphonyConfiguration extends Configuration {
         this.userEmailAddress = userEmailAddress;
     }
 
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public String getMongohost() {
-        return mongohost;
-    }
-
-    public void setMongohost(String mongohost) {
-        this.mongohost = mongohost;
-    }
-
-    public int getMongoport() {
-        return mongoport;
-    }
-
-    public void setMongoport(int mongoport) {
-        this.mongoport = mongoport;
-    }
-
-    public String getMongodb() {
-        return mongodb;
-    }
-
-    public void setMongodb(String mongodb) {
-        this.mongodb = mongodb;
-    }
-
-    public String getProxyURL() {
-        return proxyURL;
-    }
-
-    public void setProxyURL(String proxyURL) {
-        this.proxyURL = proxyURL;
-    }
 }

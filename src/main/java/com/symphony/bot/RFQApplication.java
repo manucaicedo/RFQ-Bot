@@ -1,6 +1,7 @@
 package com.symphony.bot;
 
 
+import com.symphony.bot.resources.AppAuthResource;
 import com.symphony.bot.resources.RFQBotResource;
 import com.symphony.bot.resources.RFQInfoResource;
 import io.dropwizard.Application;
@@ -53,5 +54,6 @@ public class RFQApplication extends Application<SymphonyConfiguration> {
         environment.jersey().register(RolesAllowedDynamicFeature.class);
         environment.jersey().register(new RFQBotResource(configuration));
         environment.jersey().register(new RFQInfoResource(configuration));
+        environment.jersey().register(new AppAuthResource(configuration));
     }
 }

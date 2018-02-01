@@ -7,6 +7,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.symphony.bot.POJO.RFQ;
 import com.symphony.bot.POJO.RFQRoom;
+import com.symphony.bot.SymphonyConfiguration;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.types.ObjectId;
@@ -24,8 +25,8 @@ public class MongoDBClient {
     private MongoCollection<RFQRoom> rfqRoomCollection;
     private MongoCollection<RFQ> rfqCollection;
 
-    public MongoDBClient() {
-        MongoClientURI connectionString = new MongoClientURI("mongodb://ioibot:1GaWixKxGEGe4Kfz@mifidbotcluster-shard-00-00-oboew.mongodb.net:27017,mifidbotcluster-shard-00-01-oboew.mongodb.net:27017,mifidbotcluster-shard-00-02-oboew.mongodb.net:27017/IOIBot?ssl=true&replicaSet=MiFIDBotCluster-shard-0&authSource=admin");
+    public MongoDBClient(SymphonyConfiguration config) {
+        MongoClientURI connectionString = new MongoClientURI(config.getMongoURL());
         MongoClient mongoClient = new MongoClient(connectionString);
         String dbs = mongoClient.listDatabaseNames().first();
         CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(),

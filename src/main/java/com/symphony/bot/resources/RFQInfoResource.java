@@ -25,7 +25,7 @@ public class RFQInfoResource {
 
     public RFQInfoResource(SymphonyConfiguration config) {
         this.config = config;
-        this.mongoDBClient = new MongoDBClient();
+        this.mongoDBClient = new MongoDBClient(config);
     }
 
     @GET

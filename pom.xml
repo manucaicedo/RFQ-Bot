@@ -167,6 +167,16 @@
             <artifactId>snowizard-application</artifactId>
             <version>1.8.2-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk16</artifactId>
+            <version>1.46</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bitbucket.b_c</groupId>
+            <artifactId>jose4j</artifactId>
+            <version>0.6.3</version>
+        </dependency>
     </dependencies>
 
 

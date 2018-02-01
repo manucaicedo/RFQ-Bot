@@ -50,7 +50,7 @@ public class RFQBot implements ChatListener, ChatServiceListener, RoomServiceEve
         symClient.getChatService().addListener(this);
         roomService = symClient.getRoomService();
         roomService.addRoomServiceEventListener(this);
-        mongoDBClient = new MongoDBClient();
+        mongoDBClient = new MongoDBClient(config);
         //Init connection service.
         ConnectionsService connectionsService = new ConnectionsService(symClient);
 
