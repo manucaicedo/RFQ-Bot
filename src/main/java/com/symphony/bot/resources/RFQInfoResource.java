@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/IOIInfo")
+@Path("/RFQInfo")
 public class RFQInfoResource {
 
     private SymphonyConfiguration config;
@@ -29,10 +29,10 @@ public class RFQInfoResource {
     }
 
     @GET
-    @Path("/ioi/{ioiId}")
+    @Path("/rfq/{rfqId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response startPricing(@PathParam("ioiId") String ioiId) {
-        RFQ RFQ = mongoDBClient.getRFQ(ioiId);
+    public Response startPricing(@PathParam("rfqId") String rfqId) {
+        RFQ RFQ = mongoDBClient.getRFQ(rfqId);
 
         return Response.status(Response.Status.OK).entity(RFQ).build();
     }

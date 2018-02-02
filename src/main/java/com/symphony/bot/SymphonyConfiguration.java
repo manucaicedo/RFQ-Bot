@@ -28,8 +28,6 @@ public class SymphonyConfiguration extends Configuration {
     private String botCertPassword;
     @NotEmpty
     private String botEmailAddress;
-    @NotEmpty
-    private String userEmailAddress;
 
     @NotEmpty
     private String agentAPIEndpoint;
@@ -281,14 +279,5 @@ public class SymphonyConfiguration extends Configuration {
         this.podAPIEndpoint = podAPIEndpoint;
     }
 
-    @JsonProperty
-    public String getUserEmailAddress() {
-        return userEmailAddress;
-    }
-
-    @JsonProperty("userEmailAddress")
-    public void setUserEmailAddress(String userEmailAddress) {
-        this.userEmailAddress = userEmailAddress;
-    }
 
 }
