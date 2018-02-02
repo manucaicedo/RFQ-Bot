@@ -21,7 +21,7 @@ This example shows how a Symphony chat bot using the [SymphonyOSS symphony-java-
 
 * `RFQInfoResource` class is where the endpoints that are called by the Angular app are defined to gather data about an RFQ and display it.
 
-* `AppAuthResource` class is where extension app appauth endpoint will live (work in progress)
+* `AppAuthResource` class is where extension app appauth endpoint are to complete the circle of trust for your renderer extension app (https://extension-api.symphony.com/v1.48/docs/application-authentication)
 
 
 ## Running This Sample
@@ -37,15 +37,24 @@ Set up your config in `example.yml`. Fill out the following parameters.
         botEmailAddress: bot.user@example.com
         agentAPIEndpoint: https://your-agent.symphony.com/agent
         podAPIEndpoint: https://your-pod.symphony.com/pod
-        userEmailAddress: your-email@company.com
         mongoURL: URL to your mongo instance
+        appAuthBase: https://your-pod.symphony.com:8444
+        appAuthPath: /sessionauth/v1/authenticate/extensionApp
+        appCertPath: <path to p12 file of cert which has a CN that matches your app's id>
+        appCertPassword: <password>
+        symphCertBaseURL: https://your-pod.symphony.com:8444
+        symphCertPathURL: /sessionauth/v1/app/pod/certificate
         
+Set these properties to setup https endpoints
+
         keyStorePath: 
         keyStorePassword: 
 
 If you are developing a bot that lives within an enterprise pod with on-premise components (KM and Agent) and need a proxy to reach the cloud (your pod) add the following field to your sample.yml file
 
         proxyURL: url to your internal proxy
+        proxyUsername:
+        proxyPassword
 
 
 To test the application run the following commands.
