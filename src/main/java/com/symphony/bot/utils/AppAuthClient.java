@@ -52,6 +52,7 @@ public class AppAuthClient {
         String[] localVarAuthNames = new String[0];
         GenericType<AppAuthResponse> localVarReturnType = new GenericType<AppAuthResponse>() {};
         AppAuthResponse appToken = this.apiClient.invokeAPI(localVarPath, "POST", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
+        resetToDefaultHTTPClient();
         return appToken;
     }
 
@@ -74,7 +75,7 @@ public class AppAuthClient {
         String[] localVarAuthNames = new String[0];
         GenericType<PodCert> localVarReturnType = new GenericType<PodCert>() {};
         PodCert podCert = this.apiClient.invokeAPI(localVarPath, "GET", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localVarReturnType);
-
+        resetToDefaultHTTPClient();
 
         // Get the public key from the cert
         PublicKey publicKey;
@@ -95,7 +96,13 @@ public class AppAuthClient {
             throw new LoginException("Couldn't parse cert string from Symphony into X509Certificate object:" + e.getMessage());
         }
 
+    }
 
+    private void resetToDefaultHTTPClient() throws Exception {
+        ClientConfig clientConfig = new ClientConfig();
+        Client appAuthHttpClient = CustomHttpClient.getClient(config.getBotCertPath(),config.getBotCertPassword(),config.getLocalKeystorePath(),config.getLocalKeystorePassword(),clientConfig);
+        apiClient.setBasePath(this.config.getAppAuthBase());
 
+        Configuration.getDefaultApiClient().setHttpClient(appAuthHttpClient);
     }
 }
