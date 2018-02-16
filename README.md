@@ -24,7 +24,6 @@ This example shows how a Symphony chat bot using the [SymphonyOSS symphony-java-
 
 * `AppAuthResource` class is where extension app appauth endpoint are to complete the circle of trust for your renderer extension app (https://extension-api.symphony.com/v1.48/docs/application-authentication)
 
-
 ## Running This Sample
 
 Set up your config in `example.yml`. Fill out the following parameters.
