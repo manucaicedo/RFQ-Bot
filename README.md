@@ -13,6 +13,7 @@ This example shows how a Symphony chat bot using the [SymphonyOSS symphony-java-
         -Mobile and ECM do not render structured objects.
         -For XPOD use of this integration, the app would need to be deployed at the firms that communicate with the bot.
 
+
 ## Overview
 
 * At startup, the `RFQBot` is initialized as a Chat and Room listener so the implemented methods respond to the events of the datafeed for the bot. Go to this class to find most implementation details. 
