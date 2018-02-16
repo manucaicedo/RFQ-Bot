@@ -4,6 +4,7 @@
 
 This example shows how a Symphony chat bot using the [SymphonyOSS symphony-java-client](https://github.com/symphonyoss/symphony-java-client) and Dropwizard can be used to manage the life cycle of an RFQ. The bot takes the workflow since the initial request, through quoting and negotiation, all the way to order creation. This integration makes use of the Extension API [entity-service](https://extension-api.symphony.com/docs/entity-service) to render bot messages as interactive forms. The extension app, uses iFrames to render an Angular app that connects via REST API to this project to display the current status of the RFQ at different stages and pass the input information for the bot to post it back into the room for retention and time stamp purposes. 
 
+
 ## Pre-requisites
 
     1. Service account with a valid certificate for the bot
